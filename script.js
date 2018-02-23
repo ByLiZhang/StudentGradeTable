@@ -5,7 +5,7 @@
 /**
  * Listen for the document to load and initialize the application
  */
-$(document).ready();
+$(document).ready(initializeApp);
 
 /**
  * Define all global variables here.  
@@ -19,6 +19,7 @@ $(document).ready();
  *  { name: 'Jill', course: 'Comp Sci', grade: 85 }
  * ];
  */
+var student_array = []; 
 
 /***************************************************************************************************
 * initializeApp 
@@ -27,6 +28,7 @@ $(document).ready();
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+	addClickHandlersToElements();
 }
 
 /***************************************************************************************************
@@ -36,6 +38,8 @@ function initializeApp(){
 *     
 */
 function addClickHandlersToElements(){
+	var addBtn = $('.btn-success'); 
+	addBtn.on('click', handleAddClicked);
 }
 
 /***************************************************************************************************
@@ -45,6 +49,19 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(){
+	var name = $('input[name="studentName"]');
+	var course = $('#course');
+	var grade = $('input[name="studentGrade"]');
+	var tableBody = $('tbody');
+	var tableRow = $('<tr>');
+	var tableData1 = $('<td>').text(name.val());
+	var tableData2 = $('<td>').text(course.val());
+	var tableData3 = $('<td>').text(grade.val());
+	tableRow.append(tableData1, tableData2, tableData3);
+	tableBody.append(tableRow);
+	name.val('');
+	course.val('');
+	grade.val('');
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
