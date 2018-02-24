@@ -83,8 +83,7 @@ function addStudent(){
 		student_array.push(studentData);
 	}
 	clearAddStudentFormInputs();
-	updateStudentList();
-	renderStudentOnDom(student_array);
+	updateStudentList(student_array);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -122,23 +121,30 @@ function renderStudentOnDom(inputData){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(){
-
-  
+function updateStudentList(inputData){
+	renderStudentOnDom(inputData);
+	var average = calculateGradeAverage(inputData);
+	renderGradeAverage(average);  
 }
 /***************************************************************************************************
  * calculateGradeAverage - loop through the global student array and calculate average grade and return that value
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateGradeAverage(){
+function calculateGradeAverage(inputData){
+	var runningTotal = 0;
+	for(var i = 0; i < inputData.length; i++){
+		runningTotal += parseFloat(inputData[i].grade);
+	}
+	return runningTotal/inputData.length;
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
  * @returns {undefined} none
  */
-function renderGradeAverage(){
+function renderGradeAverage(average){
+	$('.avgGrade').text(average);
 }
 
 
