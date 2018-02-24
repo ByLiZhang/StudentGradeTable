@@ -40,8 +40,11 @@ function initializeApp(){
 function addClickHandlersToElements(){
 	var addBtn = $('.btn-success');
 	var cancelBtn = $('.btn-default'); 
+	var studentList = $('.student_list');
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
+	// student_list.on('click', '.btn-danger', )
+
 }
 
 /***************************************************************************************************
@@ -50,11 +53,8 @@ function addClickHandlersToElements(){
  * @return: 
        none
  */
-function handleAddClicked(){
+function handleAddClicked(event){
 	addStudent();
-	// name.val('');
-	// course.val('');
-	// grade.val('');
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -63,12 +63,7 @@ function handleAddClicked(){
  * @calls: clearAddStudentFormInputs
  */
 function handleCancelClick(){
-	var name = $('input[name="studentName"]');
-	var course = $('#course');
-	var grade = $('input[name="studentGrade"]');
-	name.val('');
-	course.val('');
-	grade.val('');
+	clearAddStudentFormInputs();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -87,14 +82,20 @@ function addStudent(){
 		studentData.grade = grade.val();
 		student_array.push(studentData);
 	}
-	
+	clearAddStudentFormInputs();
+	updateStudentList();
 	renderStudentOnDom(student_array);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-
+	var name = $('input[name="studentName"]');
+	var course = $('#course');
+	var grade = $('input[name="studentGrade"]');
+	name.val('');
+	course.val('');
+	grade.val('');
 }
 /***************************************************************************************************
  * renderStudentOnDom - take in a student object, create html elements from the values and then append the elements
@@ -103,17 +104,16 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom(inputData){
 	var tableBody = $('tbody');
-	for (var i = 0; i < inputData.length; i++) {
+	tableBody.html('');
+	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
 		var tableRow = $('<tr>');
 		var tableData1 = $('<td>').text(inputData[i].name);
 		var tableData2 = $('<td>').text(inputData[i].course);
 		var tableData3 = $('<td>').text(inputData[i].grade);
-		tableRow.append(tableData1, tableData2, tableData3);
+		var deletBtn = $('<button>').addClass('btn btn-danger').text('Delete');
+		tableRow.append(tableData1, tableData2, tableData3, deletBtn);
 		tableBody.append(tableRow);
 	}
-
-	
-
 }
 
 /***************************************************************************************************
