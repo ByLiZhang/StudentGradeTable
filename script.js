@@ -19,7 +19,7 @@ $(document).ready(initializeApp);
  *  { name: 'Jill', course: 'Comp Sci', grade: 85 }
  * ];
  */
-var student_array = []; 
+var student_array = [];
 
 /***************************************************************************************************
 * initializeApp 
@@ -40,10 +40,13 @@ function initializeApp(){
 function addClickHandlersToElements(){
 	var addBtn = $('.btn-success');
 	var cancelBtn = $('.btn-default'); 
-	var studentList = $('.student_list');
+	var studentList = $('.student-list');
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
-	// student_list.on('click', '.btn-danger', )
+	studentList.on('click', '.btn-danger', function(event) {
+		console.log(this);
+		removeStudent(this);
+	})
 
 }
 
@@ -105,12 +108,12 @@ function renderStudentOnDom(inputData){
 	var tableBody = $('tbody');
 	tableBody.html('');
 	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
-		var tableRow = $('<tr>').addClass('form-group');
+		var tableRow = $('<tr>').addClass('form-group row'+i);
 		var tableData1 = $('<td>').text(inputData[i].name);
 		var tableData2 = $('<td>').text(inputData[i].course);
 		var tableData3 = $('<td>').text(inputData[i].grade);
 		var tableBtn = $('<td>');
-		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
+		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm row' + i).text('Delete');
 		tableBtn.append(deletBtn);
 		tableRow.append(tableData1, tableData2, tableData3, tableBtn);
 		tableBody.append(tableRow);
@@ -149,7 +152,14 @@ function renderGradeAverage(average){
 	$('.avgGrade').text(average);
 }
 
-
-
+/***************************************************************************************************
+*/
+function removeStudent(input) {
+	var row = $(input).attr('class').split(' ').pop();
+	console.log(rowNum);
+	var rowNum = row.match(/\d+/)[0];
+	student_array.splice(parseInt(rowNum),1);
+	$('tr.'+row).remove();	// equavalent to $(input).parent().parent().remove();
+}
 
 
