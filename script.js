@@ -105,12 +105,14 @@ function renderStudentOnDom(inputData){
 	var tableBody = $('tbody');
 	tableBody.html('');
 	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
-		var tableRow = $('<tr>');
+		var tableRow = $('<tr>').addClass('form-group');
 		var tableData1 = $('<td>').text(inputData[i].name);
 		var tableData2 = $('<td>').text(inputData[i].course);
 		var tableData3 = $('<td>').text(inputData[i].grade);
-		var deletBtn = $('<button>').addClass('btn btn-danger').text('Delete');
-		tableRow.append(tableData1, tableData2, tableData3, deletBtn);
+		var tableBtn = $('<td>');
+		var deletBtn = $('<button>').addClass('btn btn-danger btn-xs').text('Delete');
+		tableBtn.append(deletBtn);
+		tableRow.append(tableData1, tableData2, tableData3, tableBtn);
 		tableBody.append(tableRow);
 	}
 }
