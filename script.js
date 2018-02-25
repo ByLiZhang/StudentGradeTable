@@ -44,7 +44,6 @@ function addClickHandlersToElements(){
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
 	studentList.on('click', '.btn-danger', function(event) {
-		console.log(this);
 		removeStudent(this);
 	})
 
@@ -159,7 +158,7 @@ function removeStudent(input) {
 	console.log(rowNum);
 	var rowNum = row.match(/\d+/)[0];
 	student_array.splice(parseInt(rowNum),1);
-	$('tr.'+row).remove();	// equavalent to $(input).parent().parent().remove();
+	$('tr.'+row).remove();	// equivalent to $(input).parent().parent().remove();
 }
 
 
