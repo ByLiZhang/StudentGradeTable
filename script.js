@@ -110,7 +110,7 @@ function renderStudentOnDom(inputData){
 		var tableData2 = $('<td>').text(inputData[i].course);
 		var tableData3 = $('<td>').text(inputData[i].grade);
 		var tableBtn = $('<td>');
-		var deletBtn = $('<button>').addClass('btn btn-danger btn-xs').text('Delete');
+		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 		tableBtn.append(deletBtn);
 		tableRow.append(tableData1, tableData2, tableData3, tableBtn);
 		tableBody.append(tableRow);
