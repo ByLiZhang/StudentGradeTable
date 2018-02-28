@@ -43,9 +43,9 @@ function addClickHandlersToElements(){
 	var studentList = $('.student-list');
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
-	studentList.on('click', '.btn-danger', function(event) {
-		removeStudent(this);
-	})
+	// studentList.on('click', '.btn-danger', function(event) {
+	// 	removeStudent(this);
+	// })
 
 }
 
@@ -103,20 +103,22 @@ function clearAddStudentFormInputs(){
  * into the .student_list tbody
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
-function renderStudentOnDom(inputData){
+function renderStudentOnDom(studentObj){
 	var tableBody = $('tbody');
-	tableBody.html('');
-	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
-		var tableRow = $('<tr>').addClass('form-group');
-		var tableData1 = $('<td>').text(inputData[i].name);
-		var tableData2 = $('<td>').text(inputData[i].course);
-		var tableData3 = $('<td>').text(inputData[i].grade);
-		var tableBtn = $('<td>');
-		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
-		tableBtn.append(deletBtn);
-		tableRow.append(tableData1, tableData2, tableData3, tableBtn);
-		tableBody.append(tableRow);
-	}
+	
+	var tableRow = $('<tr>').addClass('form-group');
+	var tableData1 = $('<td>').text(studentObj.name);
+	var tableData2 = $('<td>').text(studentObj.course);
+	var tableData3 = $('<td>').text(studentObj.grade);
+	var tableBtn = $('<td>');
+	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
+	deletBtn.on('click', function(){
+		removeStudent(studentObj);
+		$(this).parent().parent().remove();
+	})
+	tableBtn.append(deletBtn);
+	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
+	tableBody.append(tableRow);
 }
 
 /***************************************************************************************************
@@ -125,9 +127,13 @@ function renderStudentOnDom(inputData){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(inputData){
-	renderStudentOnDom(inputData);
-	var average = calculateGradeAverage(inputData);
+function updateStudentList(studentArray){
+	var tableBody = $('tbody');
+	tableBody.html('');
+	for (var i = 0; i < studentArray.length; i++) {
+		renderStudentOnDom(studentArray[i]);
+	}
+	var average = calculateGradeAverage(studentArray);
 	renderGradeAverage(average);  
 }
 /***************************************************************************************************
@@ -155,15 +161,14 @@ function renderGradeAverage(average){
 */
 
 /**
- * @param  {array}
+ * @param  {object}
  * @return {undefined}
  */
 function removeStudent(input) {
-	var row = $(input).attr('class').split(' ').pop();
-	console.log(rowNum);
-	var rowNum = row.match(/\d+/)[0];
-	student_array.splice(parseInt(rowNum),1);
-	$('tr.'+row).remove();	// equivalent to $(input).parent().parent().remove();
+	var indexToDelete = student_array.indexOf(input);
+	student_array.splice(indexToDelete,1);
+	var average = calculateGradeAverage(student_array);
+	renderGradeAverage(average);
 }
 
 
