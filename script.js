@@ -40,13 +40,8 @@ function initializeApp(){
 function addClickHandlersToElements(){
 	var addBtn = $('.btn-success');
 	var cancelBtn = $('.btn-default'); 
-	var studentList = $('.student-list');
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
-	// studentList.on('click', '.btn-danger', function(event) {
-	// 	removeStudent(this);
-	// })
-
 }
 
 /***************************************************************************************************
@@ -91,9 +86,9 @@ function addStudent(){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-	var name = $('input[name="studentName"]');
+	var name = $('#studentName');
 	var course = $('#course');
-	var grade = $('input[name="studentGrade"]');
+	var grade = $('#studentGrade');
 	name.val('');
 	course.val('');
 	grade.val('');
@@ -105,7 +100,6 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom(studentObj){
 	var tableBody = $('tbody');
-	
 	var tableRow = $('<tr>').addClass('form-group');
 	var tableData1 = $('<td>').text(studentObj.name);
 	var tableData2 = $('<td>').text(studentObj.course);
@@ -146,7 +140,12 @@ function calculateGradeAverage(inputData){
 	for(var i = 0; i < inputData.length; i++){
 		runningTotal += parseFloat(inputData[i].grade);
 	}
-	return runningTotal/inputData.length;
+	var result = parseFloat((runningTotal/inputData.length).toFixed(2)).toString();
+	if (result === 'NaN') {
+		return 0;
+	} else {
+		return result;
+	}
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
