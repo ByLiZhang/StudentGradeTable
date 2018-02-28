@@ -107,12 +107,12 @@ function renderStudentOnDom(inputData){
 	var tableBody = $('tbody');
 	tableBody.html('');
 	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
-		var tableRow = $('<tr>').addClass('form-group row'+i);
+		var tableRow = $('<tr>').addClass('form-group');
 		var tableData1 = $('<td>').text(inputData[i].name);
 		var tableData2 = $('<td>').text(inputData[i].course);
 		var tableData3 = $('<td>').text(inputData[i].grade);
 		var tableBtn = $('<td>');
-		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm row' + i).text('Delete');
+		var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 		tableBtn.append(deletBtn);
 		tableRow.append(tableData1, tableData2, tableData3, tableBtn);
 		tableBody.append(tableRow);
@@ -153,6 +153,11 @@ function renderGradeAverage(average){
 
 /***************************************************************************************************
 */
+
+/**
+ * @param  {array}
+ * @return {undefined}
+ */
 function removeStudent(input) {
 	var row = $(input).attr('class').split(' ').pop();
 	console.log(rowNum);
