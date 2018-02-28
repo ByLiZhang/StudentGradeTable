@@ -135,12 +135,12 @@ function updateStudentList(studentArray){
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateGradeAverage(inputData){
+function calculateGradeAverage(studentArray){
 	var runningTotal = 0;
-	for(var i = 0; i < inputData.length; i++){
-		runningTotal += parseFloat(inputData[i].grade);
+	for(var i = 0; i < studentArray.length; i++){
+		runningTotal += parseFloat(studentArray[i].grade);
 	}
-	var result = parseFloat((runningTotal/inputData.length).toFixed(2)).toString();
+	var result = parseFloat((runningTotal/studentArray.length).toFixed(2)).toString();
 	if (result === 'NaN') {
 		return 0;
 	} else {
@@ -160,11 +160,12 @@ function renderGradeAverage(average){
 */
 
 /**
+ * removeStudent - removes the student object from the student array
  * @param  {object}
  * @return {undefined}
  */
-function removeStudent(input) {
-	var indexToDelete = student_array.indexOf(input);
+function removeStudent(studentObj) {
+	var indexToDelete = student_array.indexOf(studentObj);
 	student_array.splice(indexToDelete,1);
 	var average = calculateGradeAverage(student_array);
 	renderGradeAverage(average);
