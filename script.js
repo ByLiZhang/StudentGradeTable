@@ -39,9 +39,11 @@ function initializeApp(){
 */
 function addClickHandlersToElements(){
 	var addBtn = $('.btn-success');
-	var cancelBtn = $('.btn-default'); 
+	var cancelBtn = $('.btn-default');
+	var retrieveBtn = $('.btn-info'); 
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
+	retrieveBtn.on('click', handleDataRetrieve);
 }
 
 /***************************************************************************************************
@@ -172,4 +174,39 @@ function removeStudent(studentObj) {
 	renderGradeAverage(average);
 }
 
+function handleDataRetrieve(){
+	getData().then(ok, failed);
+}
 
+function getData(argument) {
+	var promise = {
+		then: function(resolve, reject){
+			this.reject = reject;
+			this.resolve = resolve;
+		}
+	}
+
+	$.ajax({
+		url: 'http://s-apis.learningfuze.com/sgt/get',
+		data: {'api_key': '2tomJplkJs'},
+		method: 'POST',
+		dataType: 'json',
+		success: function(data){
+			promise.resolve(data);
+		},
+		error: function(){
+			promise.reject('Failed to retrieve data.');
+		}
+	});
+	return promise;	
+}
+
+function ok(receivedData){
+	console.log('Data received successfully', receivedData);
+	var data_array = receivedData.data;
+	updateStudentList(data_array);
+}
+
+function failed(message) {
+	console.log(message);
+}
