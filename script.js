@@ -205,6 +205,7 @@ function ok(receivedData){
 	console.log('Data received successfully', receivedData);
 	var data_array = receivedData.data;
 	updateStudentList(data_array);
+	student_array = student_array.concat(data_array);
 }
 
 function failed(message) {
