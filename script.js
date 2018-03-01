@@ -108,7 +108,8 @@ function renderStudentOnDom(studentObj){
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 	deletBtn.on('click', function(){
 		removeStudent(studentObj);
-		$(this).parent().parent().remove();
+		// $(this).parent().parent().remove();
+		tableRow.remove();
 	})
 	tableBtn.append(deletBtn);
 	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
@@ -122,11 +123,6 @@ function renderStudentOnDom(studentObj){
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
 function updateStudentList(studentArray){
-	// var tableBody = $('tbody');
-	// tableBody.html('');
-	// for (var i = 0; i < studentArray.length; i++) {
-	// 	renderStudentOnDom(studentArray[i]);
-	// }
 	renderStudentOnDom(studentArray[studentArray.length-1]);
 	var average = calculateGradeAverage(studentArray);
 	renderGradeAverage(average);  
