@@ -123,7 +123,11 @@ function renderStudentOnDom(studentObj){
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
 function updateStudentList(studentArray){
-	renderStudentOnDom(studentArray[studentArray.length-1]);
+	var tableBody = $('tbody');
+	tableBody.html('');
+	for (var i = 0; i < studentArray.length; i++) {
+		renderStudentOnDom(studentArray[i]);
+	}
 	var average = calculateGradeAverage(studentArray);
 	renderGradeAverage(average);  
 }
