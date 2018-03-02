@@ -29,6 +29,7 @@ var student_array = [];
 */
 function initializeApp(){
 	addClickHandlersToElements();
+	getData().then(ok, failed);
 }
 
 /***************************************************************************************************
@@ -80,6 +81,7 @@ function addStudent(){
 		studentData.course = course.val();
 		studentData.grade = grade.val();
 		student_array.push(studentData);
+		addData(studentData);
 	}
 	clearAddStudentFormInputs();
 	updateStudentList(student_array);
@@ -109,9 +111,10 @@ function renderStudentOnDom(studentObj){
 	var tableBtn = $('<td>');
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 	deletBtn.on('click', function(){
+		console.log(studentObj.id);
 		removeStudent(studentObj);
-		// $(this).parent().parent().remove();
-		tableRow.remove();
+		deleteData(studentObj);
+		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but better;
 	})
 	tableBtn.append(deletBtn);
 	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
@@ -159,9 +162,6 @@ function renderGradeAverage(average){
 	$('.avgGrade').text(average);
 }
 
-/***************************************************************************************************
-*/
-
 /**
  * removeStudent - removes the student object from the student array
  * @param  {object}
@@ -178,14 +178,13 @@ function handleDataRetrieve(){
 	getData().then(ok, failed);
 }
 
-function getData(argument) {
+function getData() {
 	var promise = {
 		then: function(resolve, reject){
 			this.reject = reject;
 			this.resolve = resolve;
 		}
 	}
-
 	$.ajax({
 		url: 'http://s-apis.learningfuze.com/sgt/get',
 		data: {'api_key': '2tomJplkJs'},
@@ -205,9 +204,45 @@ function ok(receivedData){
 	console.log('Data received successfully', receivedData);
 	var data_array = receivedData.data;
 	updateStudentList(data_array);
-	student_array = student_array.concat(data_array);
+	student_array = data_array;
 }
 
 function failed(message) {
 	console.log(message);
+}
+
+function addData(studentObj) {
+	$.ajax({
+		url: 'http://s-apis.learningfuze.com/sgt/create',
+		data: {'api_key': '2tomJplkJs',
+				'name': studentObj.name,
+				'course': studentObj.course,
+				'grade': studentObj.grade
+		},
+		method: 'POST',
+		dataType: 'json',
+		success: function(response){
+			console.log('adding data to server',response);
+		},
+		error: function(){
+			console.log('data upload failed');
+		}
+	});
+}
+
+function deleteData(studentObj) {
+	$.ajax({
+		url: 'http://s-apis.learningfuze.com/sgt/delete',
+		data: {'api_key': '2tomJplkJs',
+				student_id: studentObj.id
+		},
+		method: 'POST',
+		dataType: 'json',
+		success: function(response){
+			console.log('deleting data from server', response);
+		},
+		error: function(){
+			console.log('data deletion failed');
+		}
+	});
 }
