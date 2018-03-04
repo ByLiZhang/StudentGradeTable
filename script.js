@@ -29,6 +29,16 @@ var student_array = [];
 */
 function initializeApp(){
 	addClickHandlersToElements();
+	var $body = $('body');
+	$(document).on({
+		ajaxStart: function(){
+			$body.addClass('loading');
+		},
+		ajaxComplete: function(){
+			$body.removeClass('loading');
+		}
+	});
+
 	getData().then(ok, failed);
 }
 
@@ -192,7 +202,11 @@ function getData() {
 		},
 		method: 'POST',
 		dataType: 'json',
+		// beforeSend: function(){
+		// 	$('body').addClass('loading');
+		// },
 		success: function(data){
+			// $('body').removeClass('loading');
 			promise.resolve(data);
 		},
 		error: function(){
