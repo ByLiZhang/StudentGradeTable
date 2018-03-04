@@ -187,7 +187,9 @@ function getData() {
 	}
 	$.ajax({
 		url: 'http://s-apis.learningfuze.com/sgt/get',
-		data: {'api_key': '2tomJplkJs'},
+		data: {'api_key': '2tomJplkJs',
+			'force-failure': 'timeout',
+		},
 		method: 'POST',
 		dataType: 'json',
 		success: function(data){
