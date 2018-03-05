@@ -124,7 +124,7 @@ function renderStudentOnDom(studentObj){
 		console.log(studentObj.id);
 		removeStudent(studentObj);
 		deleteData(studentObj);
-		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but better;
+		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
 	})
 	tableBtn.append(deletBtn);
 	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
@@ -198,15 +198,11 @@ function getData() {
 	$.ajax({
 		url: 'http://s-apis.learningfuze.com/sgt/get',
 		data: {'api_key': '2tomJplkJs',
-			'force-failure': 'timeout',
+			// 'force-failure': 'timeout',
 		},
 		method: 'POST',
 		dataType: 'json',
-		// beforeSend: function(){
-		// 	$('body').addClass('loading');
-		// },
 		success: function(data){
-			// $('body').removeClass('loading');
 			promise.resolve(data);
 		},
 		error: function(){
@@ -218,9 +214,8 @@ function getData() {
 
 function ok(receivedData){
 	console.log('Data received successfully', receivedData);
-	var data_array = receivedData.data;
-	updateStudentList(data_array);
-	student_array = data_array;
+	student_array = receivedData.data;
+	updateStudentList(student_array);
 }
 
 function failed(message) {
