@@ -66,7 +66,6 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(event){
 	addStudent();
-	getData().then(ok, failed);
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -96,7 +95,7 @@ function addStudent(){
 		addData(studentData);
 	}
 	clearAddStudentFormInputs();
-	// setTimeout( updateStudentList(student_array), 1000);
+	getData().then(ok, failed);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
