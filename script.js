@@ -33,6 +33,7 @@ function initializeApp(){
 	$(document).on({
 		ajaxStart: function(){
 			$body.addClass('loading');
+			$('#modal p').text('Waiting for response from server...');
 		},
 		ajaxComplete: function(){
 			$body.removeClass('loading');
@@ -65,6 +66,7 @@ function addClickHandlersToElements(){
  */
 function handleAddClicked(event){
 	addStudent();
+	getData().then(ok, failed);
 }
 /***************************************************************************************************
  * handleCancelClicked - Event Handler when user clicks the cancel button, should clear out student form
@@ -94,7 +96,7 @@ function addStudent(){
 		addData(studentData);
 	}
 	clearAddStudentFormInputs();
-	updateStudentList(student_array);
+	// setTimeout( updateStudentList(student_array), 1000);
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -121,7 +123,6 @@ function renderStudentOnDom(studentObj){
 	var tableBtn = $('<td>');
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 	deletBtn.on('click', function(){
-		console.log(studentObj.id);
 		removeStudent(studentObj);
 		deleteData(studentObj);
 		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
