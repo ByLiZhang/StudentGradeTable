@@ -9,7 +9,7 @@
     background: rgba( 255, 255, 255, 0.8 ) url('spinner.gif') 50% 50% no-repeat; 
 }
 
-body.loading #modal {
+body.loading #modal, .show {
     overflow: hidden;
     display: block;   
 }
@@ -21,4 +21,3 @@ body.loading #modal {
     transform: translateX(-50%);
     font-size: 5vmin;
 }
-
