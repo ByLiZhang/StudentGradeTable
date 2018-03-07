@@ -121,16 +121,21 @@ function renderStudentOnDom(studentObj){
 	var tableBtn = $('<td>');
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
 	deletBtn.on('click', async function(){
-		var deletionSuccessful = await deleteData(studentObj).then(deletionSuccess, deletionFailure);
-		if (deletionSuccessful === true) {
-			removeStudent(studentObj);
-			tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
-		} else {
-			$('#modal>p').text('Please note: you can only delete the entries that you authored.');
-			$('#modal').addClass('show');
-			setTimeout(function(){
-				$('#modal').removeClass('show');
-			}, 3000);
+		try {
+			const deletionSuccessful = await Promise.resolve(deleteData(studentObj).then(deletionSuccess, deletionFailure));
+			console.log('deletionSuccessful =', deletionSuccessful);
+			if (deletionSuccessful === true) {
+				removeStudent(studentObj);
+				tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
+			} else {
+				$('#modal>p').text('Please note: you can only delete the entries that you authored.');
+				$('#modal').addClass('show');
+				setTimeout(function(){
+					$('#modal').removeClass('show');
+				}, 3000);
+			}
+		} catch (err) {
+			console.error(err);
 		}
 	})
 	tableBtn.append(deletBtn);
@@ -277,7 +282,10 @@ function deleteData(studentObj) {
 
 function deletionSuccess(response) {
 	console.log('deleting data from server', response.success);
-	return response.success;
+	return new Promise((resolve, reject) => {
+		console.log('new promise triggered', response.success);
+		resolve(response);
+	});
 }
 
 function deletionFailure(err) {
