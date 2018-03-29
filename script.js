@@ -30,15 +30,15 @@ var student_array = [];
 function initializeApp(){
 	addClickHandlersToElements();
 	var $body = $('body');
-	$(document).on({
-		ajaxStart: function(){
-			$body.addClass('loading');
-			$('#modal p').text('Waiting for response from server...');
-		},
-		ajaxComplete: function(){
-			$body.removeClass('loading');
-		}
-	});
+	// $(document).on({
+	// 	ajaxStart: function(){
+	// 		$body.addClass('loading');
+	// 		$('#modal p').text('Waiting for response from server...');
+	// 	},
+	// 	ajaxComplete: function(){
+	// 		$body.removeClass('loading');
+	// 	}
+	// });
 
 	getData().then(ok, failed);
 }
@@ -196,7 +196,7 @@ function getData() {
 		}
 	}
 	$.ajax({
-		url: './select.php',
+		url: 'select.php',
 		data: {
 			// 'api_key': '2tomJplkJs',
 			// 'force-failure': 'timeout',
