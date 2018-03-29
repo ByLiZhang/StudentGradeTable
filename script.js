@@ -196,8 +196,9 @@ function getData() {
 		}
 	}
 	$.ajax({
-		url: 'http://s-apis.learningfuze.com/sgt/get',
-		data: {'api_key': '2tomJplkJs',
+		url: './select.php',
+		data: {
+			// 'api_key': '2tomJplkJs',
 			// 'force-failure': 'timeout',
 		},
 		method: 'POST',
@@ -230,7 +231,7 @@ function addData(studentObj) {
 				'course': studentObj.course,
 				'grade': studentObj.grade
 		},
-		method: 'POST',
+		method: 'GET',
 		dataType: 'json',
 		success: function(response){
 			console.log('adding data to server',response);
