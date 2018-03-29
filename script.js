@@ -227,7 +227,6 @@ function addData(studentObj) {
 	$.ajax({
 		url: './insert.php',
 		data: {
-				// 'api_key': '2tomJplkJs',
 				'name': studentObj.name,
 				'course': studentObj.course,
 				'grade': studentObj.grade
@@ -247,7 +246,6 @@ function deleteData(studentObj) {
 	$.ajax({
 		url: './delete.php',
 		data: {
-				// 'api_key': '2tomJplkJs',
 				student_id: studentObj.id
 		},
 		method: 'POST',
