@@ -30,15 +30,15 @@ var student_array = [];
 function initializeApp(){
 	addClickHandlersToElements();
 	var $body = $('body');
-	// $(document).on({
-	// 	ajaxStart: function(){
-	// 		$body.addClass('loading');
-	// 		$('#modal p').text('Waiting for response from server...');
-	// 	},
-	// 	ajaxComplete: function(){
-	// 		$body.removeClass('loading');
-	// 	}
-	// });
+	$(document).on({
+		ajaxStart: function(){
+			$body.addClass('loading');
+			$('#modal p').text('Waiting for response from server...');
+		},
+		ajaxComplete: function(){
+			$body.removeClass('loading');
+		}
+	});
 
 	getData().then(ok, failed);
 }
@@ -196,7 +196,7 @@ function getData() {
 		}
 	}
 	$.ajax({
-		url: 'select.php',
+		url: './select.php',
 		data: {
 			// 'api_key': '2tomJplkJs',
 			// 'force-failure': 'timeout',
@@ -215,7 +215,7 @@ function getData() {
 
 function ok(receivedData){
 	console.log('Data received successfully', receivedData);
-	student_array = receivedData.data;
+	student_array = receivedData;
 	updateStudentList(student_array);
 }
 
@@ -225,13 +225,14 @@ function failed(message) {
 
 function addData(studentObj) {
 	$.ajax({
-		url: 'http://s-apis.learningfuze.com/sgt/create',
-		data: {'api_key': '2tomJplkJs',
+		url: './insert.php',
+		data: {
+				// 'api_key': '2tomJplkJs',
 				'name': studentObj.name,
 				'course': studentObj.course,
 				'grade': studentObj.grade
 		},
-		method: 'GET',
+		method: 'POST',
 		dataType: 'json',
 		success: function(response){
 			console.log('adding data to server',response);
@@ -244,8 +245,9 @@ function addData(studentObj) {
 
 function deleteData(studentObj) {
 	$.ajax({
-		url: 'http://s-apis.learningfuze.com/sgt/delete',
-		data: {'api_key': '2tomJplkJs',
+		url: './delete.php',
+		data: {
+				// 'api_key': '2tomJplkJs',
 				student_id: studentObj.id
 		},
 		method: 'POST',
