@@ -231,7 +231,7 @@ function addData(studentObj) {
 		}
 	}
 	$.ajax({
-		url: './insert.php',
+		url: 'insert.php',
 		data: {
 				'name': studentObj.name,
 				'course': studentObj.course,
@@ -242,7 +242,8 @@ function addData(studentObj) {
 		success: function(response){
 			promise.resolve(response);
 		},
-		error: function(){
+		error: function(err){
+			console.log(err);
 			promise.reject('data upload failed');
 		}
 	});
@@ -250,6 +251,7 @@ function addData(studentObj) {
 }
 
 function addOk(data) {
+	console.log('Adding data into server database: ', data);
 	updateStudentList(student_array);
 }
 
@@ -262,7 +264,7 @@ function deleteData(studentObj) {
 		method: 'POST',
 		dataType: 'json',
 		success: function(response){
-			console.log('deleting data from server', response);
+			console.log('Deleting data from server database: ', response);
 		},
 		error: function(){
 			console.log('data deletion failed');
