@@ -19,7 +19,7 @@ $(document).ready(initializeApp);
  *  { name: 'Jill', course: 'Comp Sci', grade: 85 }
  * ];
  */
-var student_array = []; 
+var student_array = [];
 
 /***************************************************************************************************
 * initializeApp 
@@ -40,11 +40,8 @@ function initializeApp(){
 function addClickHandlersToElements(){
 	var addBtn = $('.btn-success');
 	var cancelBtn = $('.btn-default'); 
-	var studentList = $('.student_list');
 	addBtn.on('click', handleAddClicked);
 	cancelBtn.on('click', handleCancelClick);
-	// student_list.on('click', '.btn-danger', )
-
 }
 
 /***************************************************************************************************
@@ -89,9 +86,9 @@ function addStudent(){
  * clearAddStudentForm - clears out the form values based on inputIds variable
  */
 function clearAddStudentFormInputs(){
-	var name = $('input[name="studentName"]');
+	var name = $('#studentName');
 	var course = $('#course');
-	var grade = $('input[name="studentGrade"]');
+	var grade = $('#studentGrade');
 	name.val('');
 	course.val('');
 	grade.val('');
@@ -101,18 +98,21 @@ function clearAddStudentFormInputs(){
  * into the .student_list tbody
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
-function renderStudentOnDom(inputData){
+function renderStudentOnDom(studentObj){
 	var tableBody = $('tbody');
-	tableBody.html('');
-	for (var i = 0; i < inputData.length; i++) { // use nested loops and dyanmic indice
-		var tableRow = $('<tr>');
-		var tableData1 = $('<td>').text(inputData[i].name);
-		var tableData2 = $('<td>').text(inputData[i].course);
-		var tableData3 = $('<td>').text(inputData[i].grade);
-		var deletBtn = $('<button>').addClass('btn btn-danger').text('Delete');
-		tableRow.append(tableData1, tableData2, tableData3, deletBtn);
-		tableBody.append(tableRow);
-	}
+	var tableRow = $('<tr>').addClass('form-group');
+	var tableData1 = $('<td>').text(studentObj.name);
+	var tableData2 = $('<td>').text(studentObj.course);
+	var tableData3 = $('<td>').text(studentObj.grade);
+	var tableBtn = $('<td>');
+	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
+	deletBtn.on('click', function(){
+		removeStudent(studentObj);
+		$(this).parent().parent().remove();
+	})
+	tableBtn.append(deletBtn);
+	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
+	tableBody.append(tableRow);
 }
 
 /***************************************************************************************************
@@ -121,9 +121,13 @@ function renderStudentOnDom(inputData){
  * @returns {undefined} none
  * @calls renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
-function updateStudentList(inputData){
-	renderStudentOnDom(inputData);
-	var average = calculateGradeAverage(inputData);
+function updateStudentList(studentArray){
+	var tableBody = $('tbody');
+	tableBody.html('');
+	for (var i = 0; i < studentArray.length; i++) {
+		renderStudentOnDom(studentArray[i]);
+	}
+	var average = calculateGradeAverage(studentArray);
 	renderGradeAverage(average);  
 }
 /***************************************************************************************************
@@ -131,12 +135,17 @@ function updateStudentList(inputData){
  * @param: {array} students  the array of student objects
  * @returns {number}
  */
-function calculateGradeAverage(inputData){
+function calculateGradeAverage(studentArray){
 	var runningTotal = 0;
-	for(var i = 0; i < inputData.length; i++){
-		runningTotal += parseFloat(inputData[i].grade);
+	for(var i = 0; i < studentArray.length; i++){
+		runningTotal += parseFloat(studentArray[i].grade);
 	}
-	return runningTotal/inputData.length;
+	var result = parseFloat((runningTotal/studentArray.length).toFixed(2)).toString();
+	if (result === 'NaN') {
+		return 0;
+	} else {
+		return result;
+	}
 }
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
@@ -147,7 +156,19 @@ function renderGradeAverage(average){
 	$('.avgGrade').text(average);
 }
 
+/***************************************************************************************************
+*/
 
-
+/**
+ * removeStudent - removes the student object from the student array
+ * @param  {object}
+ * @return {undefined}
+ */
+function removeStudent(studentObj) {
+	var indexToDelete = student_array.indexOf(studentObj);
+	student_array.splice(indexToDelete,1);
+	var average = calculateGradeAverage(student_array);
+	renderGradeAverage(average);
+}
 
 
