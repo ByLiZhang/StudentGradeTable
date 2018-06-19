@@ -1,0 +1,23 @@
+#modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100vh;
+    width:      100vw;
+    background: rgba( 255, 255, 255, 0.8 ) url('spinner.gif') 50% 50% no-repeat; 
+}
+
+body.loading #modal, .show {
+    overflow: hidden;
+    display: block;   
+}
+
+#modal p {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 5vmin;
+}

@@ -29,6 +29,16 @@ var student_array = [];
 */
 function initializeApp(){
 	addClickHandlersToElements();
+	var $body = $('body');
+	$(document).on({
+		ajaxStart: function(){
+			$body.addClass('loading');
+			$('#modal p').text('Waiting for response from server...');
+		},
+		ajaxComplete: function(){
+			$body.removeClass('loading');
+		}
+	});
 	getData().then(ok, failed);
 }
 
@@ -110,11 +120,18 @@ function renderStudentOnDom(studentObj){
 	var tableData3 = $('<td>').text(studentObj.grade);
 	var tableBtn = $('<td>');
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
-	deletBtn.on('click', function(){
-		console.log(studentObj.id);
-		removeStudent(studentObj);
-		deleteData(studentObj);
-		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but better;
+	deletBtn.on('click', async function(){
+		var deletionSuccessful = await deleteData(studentObj).then(deletionSuccess, deletionFailure);
+		if (deletionSuccessful === true) {
+			removeStudent(studentObj);
+			tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
+		} else {
+			$('#modal>p').text('Please note: you can only delete the entries that you authored.');
+			$('#modal').addClass('show');
+			setTimeout(function(){
+				$('#modal').removeClass('show');
+			}, 3000);
+		}
 	})
 	tableBtn.append(deletBtn);
 	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
@@ -188,7 +205,9 @@ function getData() {
 	$.ajax({
 		url: 'http://s-apis.learningfuze.com/sgt/get',
 		data: {'api_key': '2tomJplkJs',
-			'force-failure': 'timeout',
+			// 'force-failure': 'server',
+			// 'force-failure': 'request',
+			// 'force-failure': 'timeout'
 		},
 		method: 'POST',
 		dataType: 'json',
@@ -204,9 +223,8 @@ function getData() {
 
 function ok(receivedData){
 	console.log('Data received successfully', receivedData);
-	var data_array = receivedData.data;
-	updateStudentList(data_array);
-	student_array = data_array;
+	student_array = receivedData.data;
+	updateStudentList(student_array);
 }
 
 function failed(message) {
@@ -219,6 +237,7 @@ function addData(studentObj) {
 		data: {'api_key': '2tomJplkJs',
 				'name': studentObj.name,
 				'course': studentObj.course,
+				'force-failure': 'timeout',
 				'grade': studentObj.grade
 		},
 		method: 'POST',
@@ -226,13 +245,19 @@ function addData(studentObj) {
 		success: function(response){
 			console.log('adding data to server',response);
 		},
-		error: function(){
-			console.log('data upload failed');
+		error: function(response){
+			console.log('data upload failed', response);
 		}
 	});
 }
 
 function deleteData(studentObj) {
+	var promise = {
+		then: function(resolve, reject){
+			this.reject = reject;
+			this.resolve = resolve;
+		}
+	}
 	$.ajax({
 		url: 'http://s-apis.learningfuze.com/sgt/delete',
 		data: {'api_key': '2tomJplkJs',
@@ -240,11 +265,21 @@ function deleteData(studentObj) {
 		},
 		method: 'POST',
 		dataType: 'json',
-		success: function(response){
-			console.log('deleting data from server', response);
+		success: function(data) {
+			promise.resolve(data);
 		},
-		error: function(){
-			console.log('data deletion failed');
+		error: function(err) {
+			promise.reject(err);
 		}
 	});
+	return promise;
+}
+
+function deletionSuccess(response) {
+	console.log('deleting data from server', response.success);
+	return response.success;
+}
+
+function deletionFailure(err) {
+	return err;
 }
