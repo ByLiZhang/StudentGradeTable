@@ -1,6 +1,5 @@
 .DS_Store
+.idea
 
 mysql_conn.php
-.idea
-README.md
 
