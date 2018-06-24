@@ -5,7 +5,8 @@ if(!$conn) {
 }
 echo `Connected to the server successfully<br>`;
 
-$query = "DELETE FROM `students` WHERE id = 15";
+$id = $_POST['student_id'];
+$query = "DELETE FROM `students` WHERE id = $id";
 $result = mysqli_query($conn, $query);
 if($result){
 	echo "Record deleted";
