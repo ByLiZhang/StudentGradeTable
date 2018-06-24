@@ -91,7 +91,7 @@ function addStudent(){
 		studentData.course = course.val();
 		studentData.grade = grade.val();
 		student_array.push(studentData);
-		addData(studentData);
+		addData(studentData).then(addOk, failed);
 	}
 	clearAddStudentFormInputs();
 	getData().then(ok, failed);
@@ -246,8 +246,14 @@ function failed(message) {
 }
 
 function addData(studentObj) {
+	var promise = {
+		then: function(resolve, reject){
+			this.reject = reject;
+			this.resolve = resolve;
+		}
+	}
 	$.ajax({
-		url: './insert.php',
+		url: 'insert.php',
 		data: {
 				'name': studentObj.name,
 				'course': studentObj.course,
@@ -257,12 +263,19 @@ function addData(studentObj) {
 		method: 'POST',
 		dataType: 'json',
 		success: function(response){
-			console.log('adding data to server',response);
+			promise.resolve(response);
 		},
-		error: function(response){
-			console.log('data upload failed', response);
+		error: function(err){
+			console.log(err);
+			promise.reject('data upload failed');
 		}
 	});
+	return promise;
+}
+
+function addOk(data) {
+	console.log('Adding data into server database: ', data);
+	updateStudentList(student_array);
 }
 
 function deleteData(studentObj) {
@@ -279,8 +292,8 @@ function deleteData(studentObj) {
 		},
 		method: 'POST',
 		dataType: 'json',
-		success: function(data) {
-			promise.resolve(data);
+		success: function(response){
+			console.log('Deleting data from server database: ', response);
 		},
 		error: function(err) {
 			promise.reject(err);
