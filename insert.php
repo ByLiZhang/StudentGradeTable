@@ -8,6 +8,7 @@ $query = "INSERT INTO `students` SET `name` = '$name', `course` = '$course', `gr
 $result = mysqli_query($conn, $query);
 $rows_affected = mysqli_affected_rows($conn);
 if($result){
+	echo json_encode($result);
 	echo "New record created successfully";
 } else {
 	echo "Error: " . mysqli_error($conn);
