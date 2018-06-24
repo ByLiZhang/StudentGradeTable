@@ -215,12 +215,14 @@ function getData() {
 		}
 	}
 	$.ajax({
-		url: 'http://s-apis.learningfuze.com/sgt/get',
-		data: {'api_key': '2tomJplkJs',
+		url: './select.php',
+		data: {},
+		//url: 'http://s-apis.learningfuze.com/sgt/get',
+		//data: {'api_key': '2tomJplkJs',
 			// 'force-failure': 'server',
 			// 'force-failure': 'request',
 			// 'force-failure': 'timeout'
-		},
+		//},
 		method: 'POST',
 		dataType: 'json',
 		success: function(data){
@@ -252,7 +254,7 @@ function addData(studentObj) {
 				'force-failure': 'timeout',
 				'grade': studentObj.grade
 		},
-		method: 'POST',
+		method: 'GET',
 		dataType: 'json',
 		success: function(response){
 			console.log('adding data to server',response);
