@@ -39,7 +39,6 @@ function initializeApp(){
 			$body.removeClass('loading');
 		}
 	});
-
 	getData().then(ok, failed);
 }
 
@@ -121,10 +120,30 @@ function renderStudentOnDom(studentObj){
 	var tableData3 = $('<td>').text(studentObj.grade);
 	var tableBtn = $('<td>');
 	var deletBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete');
+
+	// deletBtn.on('click', async function(){
+	// 	try {
+	// 		const deletionSuccessful = await Promise.resolve(deleteData(studentObj).then(deletionSuccess, deletionFailure));
+	// 		console.log('deletionSuccessful =', deletionSuccessful);
+	// 		if (deletionSuccessful === true) {
+	// 			removeStudent(studentObj);
+	// 			tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
+	// 		} else {
+	// 			$('#modal>p').text('Please note: you can only delete the entries that you authored.');
+	// 			$('#modal').addClass('show');
+	// 			setTimeout(function(){
+	// 				$('#modal').removeClass('show');
+	// 			}, 3000);
+	// 		}
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+
 	deletBtn.on('click', function(){
 		removeStudent(studentObj);
 		deleteData(studentObj);
 		tableRow.remove(); // equivalent to $(this).parent().parent().remove(), but uses lexical scope;
+
 	})
 	tableBtn.append(deletBtn);
 	tableRow.append(tableData1, tableData2, tableData3, tableBtn);
@@ -197,10 +216,13 @@ function getData() {
 	}
 	$.ajax({
 		url: './select.php',
-		data: {
-			// 'api_key': '2tomJplkJs',
-			// 'force-failure': 'timeout',
-		},
+		data: {},
+		//url: 'http://s-apis.learningfuze.com/sgt/get',
+		//data: {'api_key': '2tomJplkJs',
+			// 'force-failure': 'server',
+			// 'force-failure': 'request',
+			// 'force-failure': 'timeout'
+		//},
 		method: 'POST',
 		dataType: 'json',
 		success: function(data){
@@ -235,6 +257,7 @@ function addData(studentObj) {
 		data: {
 				'name': studentObj.name,
 				'course': studentObj.course,
+				'force-failure': 'timeout',
 				'grade': studentObj.grade
 		},
 		method: 'POST',
@@ -256,6 +279,12 @@ function addOk(data) {
 }
 
 function deleteData(studentObj) {
+	var promise = {
+		then: function(resolve, reject){
+			this.reject = reject;
+			this.resolve = resolve;
+		}
+	}
 	$.ajax({
 		url: './delete.php',
 		data: {
@@ -266,8 +295,21 @@ function deleteData(studentObj) {
 		success: function(response){
 			console.log('Deleting data from server database: ', response);
 		},
-		error: function(){
-			console.log('data deletion failed');
+		error: function(err) {
+			promise.reject(err);
 		}
 	});
+	return promise;
+}
+
+function deletionSuccess(response) {
+	console.log('deleting data from server', response.success);
+	return new Promise((resolve, reject) => {
+		console.log('new promise triggered', response.success);
+		resolve(response);
+	});
+}
+
+function deletionFailure(err) {
+	return err;
 }
